@@ -103,5 +103,29 @@ app.delete('/users/:id', async (req, res) => {
     }
 })
 
+app.patch('/users/:id', async (req, res) => {
+    try {
+        const user = await prisma.user.update({
+            where: {
+                id: req.params.id
+            },
+            data: {
+                email: req.body.email,
+                name: req.body.name,
+                age: req.body.age,
+            }
+        })
+        if (!user) {
+            res.send('Digite um ID válido')
+        } else {
+            res.send('Atualização feita com sucesso')
+        }
+        res.status(201)
+        res.send('PATCH it´s working ')
+    } catch (error) {
+        console.error(error); 
+        res.status(500).send('Internal Server Error');
+    }
+})
 
 app.listen(8000)
