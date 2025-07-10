@@ -1,12 +1,16 @@
 import express from 'express'
+import pkg from '@prisma/client'
+
+const { PrismaClient } = pkg
+const prisma = new PrismaClient()
 const app = express()
+
 app.use(express.json())
 
-const users = []
-
-app.get('/users', (req, res) => {
+app.get('/users', async (req, res) => {
     try {
-        res.json(users)
+       const users = await prisma.user.findMany()
+       res.send(users)
 
         res.status(200)
         res.send('GET it´s working')
@@ -16,15 +20,21 @@ app.get('/users', (req, res) => {
     }
 })
 
-app.post('/users', (req, res) => {
+app.post('/users', async (req, res) => {
     try {
-        users.push(req.body)
+        await prisma.user.create({
+            data: {
+                email: req.body.name,
+                name: req.body.name,
+                age: req.body.age,
+            }
+        })
 
         res.status(201)
         res.send('POST it´s working ')
-    } catch {
-        res.status(500)
-        res.send('Error')
+    } catch (error){
+        console.error(error); // mostra erro no console
+        res.status(500).send('Internal Server Error');
     }
 })
 
