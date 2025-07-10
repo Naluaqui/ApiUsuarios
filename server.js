@@ -24,7 +24,7 @@ app.post('/users', async (req, res) => {
     try {
         await prisma.user.create({
             data: {
-                email: req.body.name,
+                email: req.body.email,
                 name: req.body.name,
                 age: req.body.age,
             }
@@ -33,9 +33,10 @@ app.post('/users', async (req, res) => {
         res.status(201)
         res.send('POST it´s working ')
     } catch (error){
-        console.error(error); // mostra erro no console
+        console.error(error); 
         res.status(500).send('Internal Server Error');
     }
 })
+
 
 app.listen(8000)
